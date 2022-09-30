@@ -17,17 +17,43 @@ class UserService {
   // create user
   async createUser(input: CreateUserInput) {
     // get the user info by email
-    const user = await this.isUser(input);
-    // throw error when no user found
-    if (user) throw new ApolloError('User already exists');
-    // otherwise call user model to create a user
-    else return UserModel.create(input);
+    const findUserWithEmail = await this.isUser({
+      email: input.email,
+    });
+    const findUserWithUsername = await this.isUser({
+      userName: input.userName,
+    });
+    console.log(findUserWithEmail);
+    console.log(findUserWithUsername);
+
+    // call user model to create a user
+    if (
+      findUserWithEmail?.email !== input.email &&
+      findUserWithUsername?.userName !== input.userName
+    )
+      return UserModel.create(input);
+    // throw error when email doesnot match
+    else if (
+      findUserWithEmail?.email === input.email &&
+      findUserWithUsername?.userName !== input.userName
+    )
+      throw new ApolloError('Email already exists');
+    // throw error when username doesnot match
+    else if (
+      findUserWithUsername?.userName === input.userName &&
+      findUserWithEmail?.email !== input.email
+    )
+      throw new ApolloError('Username already exists');
+    // throw error when email and username doesnot match
+    else throw new ApolloError('User already exists');
   }
 
   // login
   async login(input: LoginInput, context: Context) {
     // generic error message for login
-    const genericLoginError = 'invalid credentials';
+    const genericLoginError = 'Invalid Credentials';
+    if (input.email && input.userName)
+      throw new ApolloError('Use email or username at once to login');
     // get user info
     const user = await this.isUser({
       userName: input.userName,
