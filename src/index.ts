@@ -17,7 +17,6 @@ import Context from '../types/context';
 
 async function bootstrap() {
   // Build the schema
-
   const schema = await buildSchema({
     resolvers,
     // authChecker
@@ -58,5 +57,3 @@ async function bootstrap() {
   connectToMongo();
 }
 bootstrap();
-
-console.log('hello World');
