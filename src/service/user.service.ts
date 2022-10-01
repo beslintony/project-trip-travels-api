@@ -23,8 +23,6 @@ class UserService {
     const findUserWithUsername = await this.isUser({
       userName: input.userName,
     });
-    console.log(findUserWithEmail);
-    console.log(findUserWithUsername);
 
     // call user model to create a user
     if (

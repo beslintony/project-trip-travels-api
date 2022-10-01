@@ -14,12 +14,13 @@ import { connectToMongo } from './util/db';
 import { verifyJWT } from './util/jwt';
 import { User } from './schema/user.schema';
 import Context from '../types/context';
+import authChecker from './util/authChecker';
 
 async function bootstrap() {
   // Build the schema
   const schema = await buildSchema({
     resolvers,
-    // authChecker
+    authChecker,
   });
 
   // Init express
