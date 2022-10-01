@@ -71,19 +71,19 @@ export class CreateUserInput {
   email: string;
 
   @MinLength(6, {
-    message: 'username must be at least 3 characters long',
+    message: 'Username must be at least 3 characters long',
   })
   @MaxLength(50, {
-    message: 'username must be less than 20 characters',
+    message: 'Username must not be more than 50 characters',
   })
   @Field(() => String)
   userName: string;
 
   @MinLength(6, {
-    message: 'password must be at least 6 characters long',
+    message: 'Password must be at least 6 characters long',
   })
-  @MaxLength(50, {
-    message: 'password must be less than 50 characters',
+  @MaxLength(20, {
+    message: 'Password must not be more than 20 characters',
   })
   @Field(() => String)
   password: string;
