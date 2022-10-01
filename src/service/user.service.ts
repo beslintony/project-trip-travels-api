@@ -7,9 +7,9 @@ import config from 'config';
 
 class UserService {
   // get user info
-  async isUser({ email, userName }: { email?: string; userName?: string }) {
+  async isUser({ email, username }: { email?: string; username?: string }) {
     const user = await UserModel.find()
-      .findByEmailorUsername(email, userName)
+      .findByEmailorUsername(email, username)
       .lean();
     return user;
   }
@@ -21,24 +21,24 @@ class UserService {
       email: input.email,
     });
     const findUserWithUsername = await this.isUser({
-      userName: input.userName,
+      username: input.username,
     });
 
     // call user model to create a user
     if (
       findUserWithEmail?.email !== input.email &&
-      findUserWithUsername?.userName !== input.userName
+      findUserWithUsername?.username !== input.username
     )
       return UserModel.create(input);
     // throw error when email doesnot match
     else if (
       findUserWithEmail?.email === input.email &&
-      findUserWithUsername?.userName !== input.userName
+      findUserWithUsername?.username !== input.username
     )
       throw new ApolloError('Email already exists');
     // throw error when username doesnot match
     else if (
-      findUserWithUsername?.userName === input.userName &&
+      findUserWithUsername?.username === input.username &&
       findUserWithEmail?.email !== input.email
     )
       throw new ApolloError('Username already exists');
@@ -50,11 +50,11 @@ class UserService {
   async login(input: LoginInput, context: Context) {
     // generic error message for login
     const genericLoginError = 'Invalid Credentials';
-    if (input.email && input.userName)
+    if (input.email && input.username)
       throw new ApolloError('Use email or username at once to login');
     // get user info
     const user = await this.isUser({
-      userName: input.userName,
+      username: input.username,
       email: input.email,
     });
     // throw error when no user found

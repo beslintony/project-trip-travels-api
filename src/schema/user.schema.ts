@@ -17,11 +17,11 @@ interface QueryHelpers {
 function findByEmailorUsername(
   this: ReturnModelType<typeof User, QueryHelpers>,
   email?: User['email'],
-  userName?: User['userName'],
+  username?: User['username'],
 ) {
   if (email) return this.findOne({ email });
-  else if (userName) return this.findOne({ userName });
-  else return this.findOne({ email, userName });
+  else if (username) return this.findOne({ username });
+  else return this.findOne({ email, username });
 }
 @pre<User>('save', async function () {
   if (!this.isModified('password')) {
@@ -31,7 +31,7 @@ function findByEmailorUsername(
   const hash = await bcrypt.hashSync(this.password, salt);
   this.password = hash;
 })
-@index({ email: 1, userName: 1 }, { unique: true })
+@index({ email: 1, username: 1 }, { unique: true })
 @queryMethod(findByEmailorUsername)
 @ObjectType()
 export class User {
@@ -48,7 +48,7 @@ export class User {
 
   @Field(() => String)
   @prop({ requied: true })
-  userName: string;
+  username: string;
 
   @Field(() => String)
   @prop({ requied: true, lowercase: true })
@@ -77,7 +77,7 @@ export class CreateUserInput {
     message: 'Username must not be more than 50 characters',
   })
   @Field(() => String)
-  userName: string;
+  username: string;
 
   @MinLength(6, {
     message: 'Password must be at least 6 characters long',
@@ -95,7 +95,7 @@ export class LoginInput {
   email?: string;
 
   @Field({ nullable: true })
-  userName?: string;
+  username?: string;
 
   @Field(() => String)
   password: string;
